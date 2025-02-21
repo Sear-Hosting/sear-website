@@ -5,17 +5,17 @@ import { Github, Twitter, MessageSquareMore } from 'lucide-react';
 const footerLinks = {
   product: [
     { href: '/plans', label: 'Plans' },
-    { href: 'custom-orders', label: 'Custom Orders' },
+    { href: '/bespoke', label: 'Bespoke Hosting' },
     { href: '/support', label: 'Support' },
   ],
   company: [
-    { href: '/about', label: 'About Us' },
-    { href: '/contact', label: 'Contact' },
-    { href: '/blog', label: 'Blog' },
+    { href: '/under-construction', label: 'About Us' },
+    { href: '/under-construction', label: 'Contact' },
+    { href: '/under-construction', label: 'Blog' },
   ],
   legal: [
-    { href: '/privacy', label: 'Privacy Policy' },
-    { href: '/terms', label: 'Terms of Service' },
+    { href: '/under-construction', label: 'Privacy Policy' },
+    { href: '/under-construction', label: 'Terms of Service' },
   ],
 };
 
@@ -42,7 +42,7 @@ export function Footer() {
               </div>
             </Link>
             <p className="text-sm text-muted-foreground">
-              Next-generation Minecraft hosting with undeniable savings and reliability.
+            No fuss, just reliable hosting at a fair price.
             </p>
             <div className="flex space-x-4">
               <Link href="https://discord.gg/sear" className="text-foreground/60 hover:text-primary transition-colors">
