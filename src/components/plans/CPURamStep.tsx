@@ -36,7 +36,7 @@ export default function CPURamStep({ state, onUpdate, onNext, onBack }: StepProp
   const ramPrice = state.ram && state.region ? RAM_PRICING(state.region, state.ram, state.planType) : 0
   const totalPrice = state.region === 'us-east' ? ramPrice : cpuPrice + ramPrice
 
-  const showCPUSlider = state.region !== 'us-east'
+  const showCPUSlider = state.region !== ''
 
   return (
     <div className="space-y-6 md:space-y-8">
