@@ -19,8 +19,8 @@ export default function CPURamStep({ state, onUpdate, onNext, onBack }: StepProp
   /*React.useEffect(() => {
     if (state.region === 'us-east' && state.cpuThreads !== US_EAST_FIXED.cpuThreads) {
       onUpdate({ cpuThreads: US_EAST_FIXED.cpuThreads })
-    }*/
-  }, [state.region, state.cpuThreads, onUpdate])
+    }
+  }, [state.region, state.cpuThreads, onUpdate])*/
 
   const handleCPUChange = (value: number[]) => {
     const threads = CPU_OPTIONS[value[0]]
