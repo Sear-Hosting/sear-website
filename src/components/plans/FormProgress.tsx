@@ -2,7 +2,6 @@ import * as React from 'react'
 import { FormStep } from "./types"
 import { cn } from "@/lib/utils"
 import { useIsMobile } from "@/hooks/use-mobile"
-
 interface Props {
   currentStep: FormStep
   state?: { region?: string }
