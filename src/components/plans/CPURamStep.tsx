@@ -4,13 +4,12 @@ import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
 import { CPUThreads, RAM, StepProps, RAM_PRICING, REGION_PLAN_CONFIG, getCPUThreadPrice } from "./types"
 import { formatPrice } from "./types"
-
-const CPU_OPTIONS: CPUThreads[] = ['1', '2', '3', '4', '5', '6', '7', '8']
-
 export default function CPURamStep({ state, onUpdate, onNext, onBack }: StepProps) {
   const availableRAMOptions = state.region && state.planType 
     ? [...REGION_PLAN_CONFIG[state.region].ramOptions[state.planType]] as RAM[]
     : []
+
+ const CPU_OPTIONS: CPUThreads[] = state.region === 'us-east' ? ['2', '3', '4', '5', '6', '7', '8'] : ['1', '2', '3', '4', '5', '6', '7', '8']
 
   const cpuIndex = CPU_OPTIONS.indexOf(state.cpuThreads || '1')
   const ramIndex = availableRAMOptions.indexOf(state.ram || availableRAMOptions[0])
@@ -34,9 +33,9 @@ export default function CPURamStep({ state, onUpdate, onNext, onBack }: StepProp
 
   const cpuPrice = state.cpuThreads ? getCPUThreadPrice(state.region, state.planType, state.cpuThreads) : 0
   const ramPrice = state.ram && state.region ? RAM_PRICING(state.region, state.ram, state.planType) : 0
-  const totalPrice = state.region === '' ? ramPrice : cpuPrice + ramPrice
+  const totalPrice = /* state.region === '' ? ramPrice : */ cpuPrice + ramPrice
 
-  const showCPUSlider = state.region !== ''
+  const showCPUSlider = /* state.region !== '' */ true
 
   return (
     <div className="space-y-6 md:space-y-8">
@@ -70,7 +69,7 @@ export default function CPURamStep({ state, onUpdate, onNext, onBack }: StepProp
                 />
               </div>
               <div className="flex justify-between text-sm px-1 text-muted-foreground">
-                <span>1 Thread</span>
+                <span>{CPU_OPTIONS[0]} Thread</span>
                 <span>8 Threads</span>
               </div>
               <div className="text-center">

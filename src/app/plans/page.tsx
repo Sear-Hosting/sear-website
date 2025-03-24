@@ -123,7 +123,7 @@ export default function PlansPage() {
     if (state.region === 'us-east' && STEP_ORDER[currentIndex + 1] === 'storage') {
       setStep('checkout')
       return
-    }
+      }
 
     const nextStep = STEP_ORDER[currentIndex + 1]
     if (nextStep) {
@@ -137,8 +137,13 @@ export default function PlansPage() {
 
   const handleBack = () => {
     const currentIndex = STEP_ORDER.indexOf(step)
-    if (currentIndex > 0) {
-      setStep(STEP_ORDER[currentIndex - 1])
+      if (state.region === 'us-east' && STEP_ORDER[currentIndex - 1] === 'storage') {
+          setStep('cpuram')
+      }
+      else if (currentIndex > 0) {
+          setStep(STEP_ORDER[currentIndex - 1])
+
+
       // Scroll to top on mobile when changing steps
       if (isMobile) {
         window.scrollTo({ top: 0, behavior: 'smooth' })

@@ -69,8 +69,8 @@ export function BillingStep({ state, onUpdate, onNext, onBack, isValid = false, 
                 </div>
                 <div className="text-sm text-muted-foreground">
                   {state.ram}GB RAM {state.region === 'us-east' && `($${US_EAST_FIXED.ramPricePerGB.toFixed(2)}/GB)`}
-                </div>
-                {state.region !== '' && state.cpuThreads && (
+                              </div>
+                {/*state.region !== '' && */state.cpuThreads && (
                   <div className="text-sm text-muted-foreground">
                     {state.cpuThreads} CPU Thread{state.cpuThreads !== '1' ? 's' : ''}
                   </div>
@@ -86,10 +86,9 @@ export function BillingStep({ state, onUpdate, onNext, onBack, isValid = false, 
               </div>
               <div className="text-xl font-semibold">
                 {formatPrice(calculateComponentPrice(
-                  state.region === ''
-                    ? RAM_PRICING(state.region, state.ram, state.planType)
-                    : (
-                      RAM_PRICING(state.region, state.ram, state.planType) +
+                /* state.region === ''
+                   ? RAM_PRICING(state.region, state.ram, state.planType) : */
+                   (RAM_PRICING(state.region, state.ram, state.planType) +
                       (state.cpuThreads ? getCPUThreadPrice(state.region, state.planType, state.cpuThreads) : 0)
                     ),
                   state.billingPeriod

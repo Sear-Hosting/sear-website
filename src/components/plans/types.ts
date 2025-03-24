@@ -52,7 +52,7 @@ export const getCPUThreadPrice = (region: Region, planType: PlanType, threads: C
   const threadCount = Number(threads);
 
   if (region === 'us-east') {
-      return threadCount * 1.25; // US East 2 free threads
+      return threadCount <= 2 ? 0 : (threadCount - 2) * 1.25; // US East 2 free threads
   }
 
   // Budget+ Asia regions have higher per-thread pricing
@@ -77,7 +77,6 @@ export const CPU_THREAD_PRICING: Record<CPUThreads, number> = {
 }
 
 export const US_EAST_FIXED = {
-  cpuThreads: '4' as const,
   storage: '50' as const,
   ramPricePerGB: 0.75
 }
@@ -85,7 +84,7 @@ export const US_EAST_FIXED = {
 export const RAM_PRICING = (region: Region, ram: RAM, planType: PlanType = 'budget'): number => {
   const ramAmount = Number(ram);
   
-  if (region === '') {
+  if (region === 'us-east') {
     return ramAmount * US_EAST_FIXED.ramPricePerGB;
   }
 
@@ -198,14 +197,14 @@ export const StepValidators: Record<FormStep | 'billing' | 'ram', StepValidation
   },
   cpuram: {
     canProceed: (state) => {
-      if (state.region === '') {
+      /*if (state.region === '') {
         return Boolean(
           state.region &&
           state.planType &&
           state.ram &&
           isValidRAMForPlan(state.region, state.planType, state.ram)
         )
-      }
+      }*/
       return Boolean(
         state.region &&
         state.planType &&
@@ -215,7 +214,7 @@ export const StepValidators: Record<FormStep | 'billing' | 'ram', StepValidation
       )
     },
     getAvailableOptions: (state) => ({
-      cpuThreads: state.region !== '' ? Object.keys(CPU_THREAD_PRICING) : [],
+      cpuThreads: /*state.region !== '' ?*/ Object.keys(CPU_THREAD_PRICING),
       ram: (state.region && state.planType)
         ? REGION_PLAN_CONFIG[state.region].ramOptions[state.planType]
         : []
@@ -230,7 +229,7 @@ export const StepValidators: Record<FormStep | 'billing' | 'ram', StepValidation
       }
 
       if (update.cpuThreads) {
-        if (state.region === '') return false
+      //if (state.region === '') return false
         if (!(update.cpuThreads in CPU_THREAD_PRICING)) return false
       }
 
@@ -261,12 +260,12 @@ export const StepValidators: Record<FormStep | 'billing' | 'ram', StepValidation
         isValidRAMForPlan(state.region, state.planType, state.ram)
       )
 
-      if (state.region !== '') {
+    /*if (state.region !== '') {
         return baseRequirements && Boolean(
           state.cpuThreads &&
           state.storage
         )
-      }
+      }*/
 
       return baseRequirements
     },

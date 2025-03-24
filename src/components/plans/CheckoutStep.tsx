@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Button } from "@/components/ui/button"
-import { StepProps, formatPrice, RAM_PRICING, STORAGE_PRICING, generateCheckoutUrl, calculateComponentPrice, getCPUThreadPrice } from "./types"
+import { StepProps, formatPrice, RAM_PRICING, STORAGE_PRICING, generateCheckoutUrl, calculateComponentPrice, getCPUThreadPrice,  } from "./types"
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
