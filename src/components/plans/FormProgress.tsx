@@ -19,7 +19,7 @@ const ALL_STEPS: { step: FormStep; label: string }[] = [
 
 export function FormProgress({ currentStep, state }: Props) {
   const STEPS = React.useMemo(() => {
-    if (state?.region === 'us-east') {
+    if (state.region === 'us-east') {
       return ALL_STEPS.filter(step => step.step !== 'storage')
     }
     return ALL_STEPS

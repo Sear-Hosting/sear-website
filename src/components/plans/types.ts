@@ -52,7 +52,7 @@ export const getCPUThreadPrice = (region: Region, planType: PlanType, threads: C
   const threadCount = Number(threads);
 
   if (region === 'us-east') {
-    return 0; // US East has fixed pricing with no per-thread cost
+      return threadCount * 1.25; // US East 2 free threads
   }
 
   // Budget+ Asia regions have higher per-thread pricing
@@ -85,7 +85,7 @@ export const US_EAST_FIXED = {
 export const RAM_PRICING = (region: Region, ram: RAM, planType: PlanType = 'budget'): number => {
   const ramAmount = Number(ram);
   
-  if (region === 'us-east') {
+  if (region === '') {
     return ramAmount * US_EAST_FIXED.ramPricePerGB;
   }
 
@@ -198,7 +198,7 @@ export const StepValidators: Record<FormStep | 'billing' | 'ram', StepValidation
   },
   cpuram: {
     canProceed: (state) => {
-      if (state.region === 'us-east') {
+      if (state.region === '') {
         return Boolean(
           state.region &&
           state.planType &&
@@ -215,7 +215,7 @@ export const StepValidators: Record<FormStep | 'billing' | 'ram', StepValidation
       )
     },
     getAvailableOptions: (state) => ({
-      cpuThreads: state.region !== 'us-east' ? Object.keys(CPU_THREAD_PRICING) : [],
+      cpuThreads: state.region !== '' ? Object.keys(CPU_THREAD_PRICING) : [],
       ram: (state.region && state.planType)
         ? REGION_PLAN_CONFIG[state.region].ramOptions[state.planType]
         : []
@@ -230,7 +230,7 @@ export const StepValidators: Record<FormStep | 'billing' | 'ram', StepValidation
       }
 
       if (update.cpuThreads) {
-        if (state.region === 'us-east') return false
+        if (state.region === '') return false
         if (!(update.cpuThreads in CPU_THREAD_PRICING)) return false
       }
 
@@ -261,7 +261,7 @@ export const StepValidators: Record<FormStep | 'billing' | 'ram', StepValidation
         isValidRAMForPlan(state.region, state.planType, state.ram)
       )
 
-      if (state.region !== 'us-east') {
+      if (state.region !== '') {
         return baseRequirements && Boolean(
           state.cpuThreads &&
           state.storage
@@ -348,6 +348,10 @@ export const generateCheckoutUrl = (config: FormState): string => {
     params.set(`config[${configSet.params.SERVER_TYPE}]`,
       configSet.values.serverType[config.serverType])
   }
+  if (config.cpuThreads && configSet.params.CPU && configSet.values.cpu?.[config.cpuThreads]) {
+    params.set(`config[${configSet.params.CPU}]`,
+      configSet.values.cpu[config.cpuThreads])
+  }
 
   // Optional parameters for non-US regions
   if (config.region !== 'us-east') {
@@ -359,11 +363,6 @@ export const generateCheckoutUrl = (config: FormState): string => {
     if (config.storage && configSet.params.DISK && configSet.values.storage?.[config.storage]) {
       params.set(`config[${configSet.params.DISK}]`,
         configSet.values.storage[config.storage])
-    }
-
-    if (config.cpuThreads && configSet.params.CPU && configSet.values.cpu?.[config.cpuThreads]) {
-      params.set(`config[${configSet.params.CPU}]`,
-        configSet.values.cpu[config.cpuThreads])
     }
   }
 
@@ -494,7 +493,8 @@ export const CHECKOUT_CONFIGS: Record<'BUDGET_ASIA' | 'BUDGET_PLUS_ASIA' | 'BUDG
     baseUrl: 'https://billing.sear.host/checkout/config/15',
     params: {
       RAM: '44',
-      SERVER_TYPE: '45'
+      SERVER_TYPE: '45',
+      CPU: '50'
     },
     values: {
       ram: {
@@ -512,7 +512,17 @@ export const CHECKOUT_CONFIGS: Record<'BUDGET_ASIA' | 'BUDGET_PLUS_ASIA' | 'BUDG
         'PocketmineMP': '171',
         'Forge': '170',
         'GeyserMC': '172'
-      }
+      },
+      cpu: {
+            '1': '194',
+            '2': '195',
+            '3': '196',
+            '4': '197',
+            '5': '198',
+            '6': '199',
+            '7': '200',
+            '8': '201'
+        }
     }
   }
 } as const

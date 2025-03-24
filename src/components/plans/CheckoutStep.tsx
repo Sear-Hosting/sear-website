@@ -20,7 +20,7 @@ export function CheckoutStep({ state, onUpdate, onBack }: StepProps) {
 
   const isUSEast = state.region === 'us-east'
   const priceBreakdown: PriceBreakdownItem[] = [
-    ...(isUSEast ? [] : [
+    ...([
       {
         label: `CPU (${state.cpuThreads} Thread${state.cpuThreads === '1' ? '' : 's'})`,
         monthlyPrice: state.cpuThreads ? getCPUThreadPrice(state.region, state.planType, state.cpuThreads) : 0

@@ -1,0 +1,79 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\pione\\source\\repos\\sear-website\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\pione\\source\\repos\\sear-website\\src\\components\\plans\\FormProgress.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\components\\plans\\FormProgress.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\pione\\source\\repos\\sear-website\\src\\components\\plans\\CheckoutStep.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\components\\plans\\CheckoutStep.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\pione\\source\\repos\\sear-website\\src\\components\\plans\\PlanStep.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\components\\plans\\PlanStep.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "FormProgress.tsx",
+              "DocumentMoniker": "C:\\Users\\pione\\source\\repos\\sear-website\\src\\components\\plans\\FormProgress.tsx",
+              "RelativeDocumentMoniker": "src\\components\\plans\\FormProgress.tsx",
+              "ToolTip": "C:\\Users\\pione\\source\\repos\\sear-website\\src\\components\\plans\\FormProgress.tsx",
+              "RelativeToolTip": "src\\components\\plans\\FormProgress.tsx",
+              "ViewState": "AgIAABYAAAAAAAAAAAAQwAIAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2025-03-23T07:26:07.572Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "CheckoutStep.tsx",
+              "DocumentMoniker": "C:\\Users\\pione\\source\\repos\\sear-website\\src\\components\\plans\\CheckoutStep.tsx",
+              "RelativeDocumentMoniker": "src\\components\\plans\\CheckoutStep.tsx",
+              "ToolTip": "C:\\Users\\pione\\source\\repos\\sear-website\\src\\components\\plans\\CheckoutStep.tsx",
+              "RelativeToolTip": "src\\components\\plans\\CheckoutStep.tsx",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2025-03-23T07:25:19.925Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "PlanStep.tsx",
+              "DocumentMoniker": "C:\\Users\\pione\\source\\repos\\sear-website\\src\\components\\plans\\PlanStep.tsx",
+              "RelativeDocumentMoniker": "src\\components\\plans\\PlanStep.tsx",
+              "ToolTip": "C:\\Users\\pione\\source\\repos\\sear-website\\src\\components\\plans\\PlanStep.tsx",
+              "RelativeToolTip": "src\\components\\plans\\PlanStep.tsx",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2025-03-23T07:23:40.885Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
