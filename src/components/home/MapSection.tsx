@@ -12,7 +12,7 @@ import { DATACENTER_LOCATIONS, usePing } from '@/hooks/use-ping';
 export function MapSection() {
   const pings = usePing();
   
-  const geoUrl = "https://unpkg.com/world-atlas/countries-50m.json";
+  const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
   const markers = useMemo(() => 
     Object.entries(DATACENTER_LOCATIONS).map(([key, location]) => ({
@@ -43,8 +43,8 @@ export function MapSection() {
                   <Geography
                     key={geo.rsmKey}
                     geography={geo}
-                    fill="rgba(255, 255, 255, 0.03)"
-                    stroke="rgba(255, 255, 255, 0.1)"
+                    fill="rgba(255, 255, 255, 0.1)"
+                    stroke="rgba(255, 255, 255, 0.3)"
                     strokeWidth={0.5}
                   />
                 ))
@@ -54,7 +54,6 @@ export function MapSection() {
             {markers.map(({ name, coordinates, ping }) => (
               <Marker key={name} coordinates={coordinates as [number, number]}>
                 <g>
-                  {/* Ping circle animation */}
                   <circle
                     r="8"
                     fill="none"
@@ -62,13 +61,11 @@ export function MapSection() {
                     strokeWidth="2"
                     className="animate-ping opacity-30"
                   />
-                  {/* Main marker dot */}
                   <circle
                     r="4"
                     fill={ping === -1 ? "rgb(255, 59, 48)" : "#5856D6"} // Use destructive color for error, secondary for normal
                   />
                 </g>
-                {/* Location name */}
                 <text
                   textAnchor="middle"
                   y={-15}
@@ -77,7 +74,6 @@ export function MapSection() {
                 >
                   {name}
                 </text>
-                {/* Ping label */}
                 <text
                   textAnchor="middle"
                   y={20}
