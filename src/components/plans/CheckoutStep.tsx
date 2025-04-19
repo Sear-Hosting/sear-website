@@ -14,26 +14,29 @@ interface PriceBreakdownItem {
 export function CheckoutStep({ state, onUpdate, onBack }: StepProps) {
   const [billingPeriod, setBillingPeriod] = React.useState(state.billingPeriod)
   
+  // Destructure state for useMemo dependencies
+  const { region, planType, serverType, ram, storage, cpuThreads } = state
+
   React.useEffect(() => {
     setBillingPeriod(state.billingPeriod)
   }, [state.billingPeriod])
 
-  const isUSEast = state.region === 'us-east'
+  const isUSEast = region === 'us-east'
   const priceBreakdown: PriceBreakdownItem[] = [
     ...([
       {
-        label: `CPU (${state.cpuThreads} Thread${state.cpuThreads === '1' ? '' : 's'})`,
-        monthlyPrice: state.cpuThreads ? getCPUThreadPrice(state.region, state.planType, state.cpuThreads) : 0
+        label: `CPU (${cpuThreads} Thread${cpuThreads === '1' ? '' : 's'})`,
+        monthlyPrice: cpuThreads ? getCPUThreadPrice(region, planType, cpuThreads) : 0
       }
     ]),
     {
-      label: `RAM (${state.ram}GB)${isUSEast ? ' ($0.75/GB)' : ''}`,
-      monthlyPrice: RAM_PRICING(state.region, state.ram, state.planType)
+      label: `RAM (${ram}GB)${isUSEast ? ' ($0.75/GB)' : ''}`,
+      monthlyPrice: RAM_PRICING(region, ram, planType)
     },
     ...(isUSEast ? [] : [
       {
-        label: `Storage (${state.storage}GB NVMe SSD)`,
-        monthlyPrice: state.storage ? STORAGE_PRICING[state.storage] : 0
+        label: `Storage (${storage}GB NVMe SSD)`,
+        monthlyPrice: storage ? STORAGE_PRICING[storage] : 0
       }
     ])
   ].filter(Boolean)
@@ -53,15 +56,19 @@ export function CheckoutStep({ state, onUpdate, onBack }: StepProps) {
     onUpdate({ billingPeriod: value as 'monthly' | 'quarterly' })
   }, [onUpdate])
 
-  const checkoutLink = React.useMemo(() => generateCheckoutUrl({ ...state, billingPeriod }), [
-    state.region,
-    state.planType,
-    state.serverType,
-    state.ram,
-    state.storage,
-    state.cpuThreads,
-    billingPeriod
-  ])
+  const checkoutLink = React.useMemo(
+    () =>
+      generateCheckoutUrl({
+        region,
+        planType,
+        serverType,
+        ram,
+        storage,
+        cpuThreads,
+        billingPeriod,
+      }),
+    [region, planType, serverType, ram, storage, cpuThreads, billingPeriod]
+  )
 
   return (
     <div className="space-y-6">
@@ -75,13 +82,13 @@ export function CheckoutStep({ state, onUpdate, onBack }: StepProps) {
           <div className="grid gap-6">
             <div className="grid grid-cols-2 gap-2 text-sm">
               <span className="text-gray-600">Region:</span>
-              <span className="font-medium">{state.region}</span>
+              <span className="font-medium">{region}</span>
               
               <span className="text-gray-600">Plan:</span>
-              <span className="font-medium">{state.planType}</span>
+              <span className="font-medium">{planType}</span>
               
               <span className="text-gray-600">Server Type:</span>
-              <span className="font-medium">{state.serverType}</span>
+              <span className="font-medium">{serverType}</span>
             </div>
 
             <Separator />
