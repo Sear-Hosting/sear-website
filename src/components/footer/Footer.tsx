@@ -14,8 +14,9 @@ const footerLinks = {
     { href: '/under-construction', label: 'Blog' },
   ],
   legal: [
-    { href: '/under-construction', label: 'Privacy Policy' },
-    { href: '/under-construction', label: 'Terms of Service' },
+    { href: '/terms-of-service', label: 'Terms of Service' },
+    { href: '/privacy-policy', label: 'Privacy Policy' },
+    { href: '/sla', label: 'Service Level Agreement' },
   ],
 };
 
