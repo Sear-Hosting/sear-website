@@ -13,8 +13,7 @@ type PlanInfo = {
 }
 
 const PLAN_INFO: PlanInfo[] = [
-  { type: 'budget', baseLabel: 'Budget' },
-  { type: 'budget+', baseLabel: 'Budget+' }
+  { type: 'budget', baseLabel: 'Budget' }
 ] as const
 
 export function PlanStep({ state, onUpdate, onNext, onBack, isValid = false, availableOptions }: StepProps) {
