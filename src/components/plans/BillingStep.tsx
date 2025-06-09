@@ -88,8 +88,8 @@ export function BillingStep({ state, onUpdate, onNext, onBack, isValid = false, 
                 {formatPrice(calculateComponentPrice(
                 /* state.region === ''
                    ? RAM_PRICING(state.region, state.ram, state.planType) : */
-                   (RAM_PRICING(state.region, state.ram, state.planType) +
-                      (state.cpuThreads ? getCPUThreadPrice(state.region, state.planType, state.cpuThreads) : 0)
+                   (RAM_PRICING(state.region, state.ram) +
+                      (state.cpuThreads ? getCPUThreadPrice(state.region, state.cpuThreads) : 0)
                     ),
                   state.billingPeriod
                 ), 'month')}

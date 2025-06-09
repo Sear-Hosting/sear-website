@@ -26,12 +26,12 @@ export function CheckoutStep({ state, onUpdate, onBack }: StepProps) {
     ...([
       {
         label: `CPU (${cpuThreads} Thread${cpuThreads === '1' ? '' : 's'})`,
-        monthlyPrice: cpuThreads ? getCPUThreadPrice(region, planType, cpuThreads) : 0
+        monthlyPrice: cpuThreads ? getCPUThreadPrice(region, cpuThreads) : 0
       }
     ]),
     {
       label: `RAM (${ram}GB)${isUSEast ? ' ($0.75/GB)' : ''}`,
-      monthlyPrice: RAM_PRICING(region, ram, planType)
+      monthlyPrice: RAM_PRICING(region, ram)
     },
     ...(isUSEast ? [] : [
       {

@@ -31,8 +31,8 @@ export default function CPURamStep({ state, onUpdate, onNext, onBack }: StepProp
     onUpdate({ ram })
   }
 
-  const cpuPrice = state.cpuThreads ? getCPUThreadPrice(state.region, state.planType, state.cpuThreads) : 0
-  const ramPrice = state.ram && state.region ? RAM_PRICING(state.region, state.ram, state.planType) : 0
+  const cpuPrice = state.cpuThreads ? getCPUThreadPrice(state.region, state.cpuThreads) : 0
+  const ramPrice = state.ram && state.region ? RAM_PRICING(state.region, state.ram) : 0
   const totalPrice = /* state.region === '' ? ramPrice : */ cpuPrice + ramPrice
 
   const showCPUSlider = /* state.region !== '' */ true
