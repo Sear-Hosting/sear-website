@@ -1,19 +1,23 @@
 // Basic types
 export type Region = 'india' | 'singapore' | 'us-east'
 export type PlanType = 'budget'
+export type ServiceType = 'minecraft' | 'discord-bot'
 export type ServerType = 'PaperMC' | 'Fabric' | 'PocketmineMP' | 'Forge' | 'GeyserMC'
-export type CPUThreads = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8'
-export type RAM = '2' | '3' | '4' | '5' | '6' | '7' | '8' | '10' | '12' | '16' | '20'
-export type Storage = '50' | '75' | '100' | '150' | '200'
+export type DiscordRuntime = 'nodejs' | 'python'
+export type CPUThreads = '0.5' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8'
+export type RAM = '0.5' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '10' | '12' | '16' | '20'
+export type Storage = '3' | '50' | '75' | '100' | '150' | '200'
 export type Currency = 'USD' | 'PHP' | 'INR'
 export type BillingPeriod = 'monthly' | 'quarterly'
-export type FormStep = 'region' | 'plan' | 'server' | 'cpuram' | 'storage' | 'checkout'
+export type FormStep = 'type' | 'region' | 'plan' | 'server' | 'runtime' | 'cpuram' | 'storage' | 'checkout'
 
 // Interfaces
 export interface FormState {
   region: Region
   planType: PlanType
+  serviceType?: ServiceType
   serverType?: ServerType
+  discordRuntime?: DiscordRuntime
   cpuThreads?: CPUThreads
   ram: RAM
   storage?: Storage
@@ -47,7 +51,12 @@ export const SERVER_TYPES: ServerType[] = [
 ]
 
 // Pricing
-export const getCPUThreadPrice = (region: Region, threads: CPUThreads): number => {
+export const getCPUThreadPrice = (region: Region, threads: CPUThreads, serviceType?: ServiceType): number => {
+  // Discord bot special pricing
+  if (serviceType === 'discord-bot') {
+    return 0; // CPU is free for Discord bots
+  }
+
   const basePrice = 3.75; // Base price per thread for Budget Asia
   const threadCount = Number(threads);
 
@@ -61,6 +70,7 @@ export const getCPUThreadPrice = (region: Region, threads: CPUThreads): number =
 
 // Base CPU thread pricing for reference
 export const CPU_THREAD_PRICING: Record<CPUThreads, number> = {
+  '0.5': 0, // Discord bot special pricing
   '1': 3.75,
   '2': 7.50,
   '3': 11.25,
@@ -76,7 +86,12 @@ export const US_EAST_FIXED = {
   ramPricePerGB: 0.75
 }
 
-export const RAM_PRICING = (region: Region, ram: RAM): number => {
+export const RAM_PRICING = (region: Region, ram: RAM, serviceType?: ServiceType): number => {
+  // Discord bot special pricing
+  if (serviceType === 'discord-bot') {
+    return 0; // RAM is free for Discord bots
+  }
+
   const ramAmount = Number(ram);
   
   if (region === 'us-east') {
@@ -89,12 +104,16 @@ export const RAM_PRICING = (region: Region, ram: RAM): number => {
 }
 
 export const STORAGE_PRICING: Record<Storage, number> = {
+  '3': 0, // Discord bot special pricing
   '50': 2.50,
   '75': 3.75,
   '100': 5.00,
   '150': 7.50,
   '200': 10.00
 }
+
+// Discord Bot fixed pricing
+export const DISCORD_BOT_PRICE = 1.5; // $1.5/month flat rate
 
 // Plan specifications
 export type PlanSpecs = {
@@ -124,19 +143,19 @@ export const REGION_PLAN_CONFIG = {
   india: {
     availablePlans: ['budget'] as const,
     ramOptions: {
-      budget: ['2', '3', '4', '5', '6', '7', '8', '10', '12', '16', '20'] as const
+      budget: ['0.5', '2', '3', '4', '5', '6', '7', '8', '10', '12', '16', '20'] as const
     }
   },
   singapore: {
     availablePlans: ['budget'] as const,
     ramOptions: {
-      budget: ['2', '3', '4', '5', '6', '7', '8', '10', '12', '16', '20'] as const
+      budget: ['0.5', '2', '3', '4', '5', '6', '7', '8', '10', '12', '16', '20'] as const
     }
   },
   'us-east': {
     availablePlans: ['budget'] as const,
     ramOptions: {
-      budget: ['4', '6', '8', '10', '12', '16', '20'] as const
+      budget: ['0.5', '4', '6', '8', '10', '12', '16', '20'] as const
     }
   }
 } as const
@@ -173,10 +192,32 @@ export const StepValidators: Record<FormStep | 'billing' | 'ram', StepValidation
         isValidPlanForRegion(state.region, update.planType)
       )
   },
+  type: {
+    canProceed: (state) => Boolean(state.serviceType),
+    getAvailableOptions: () => ['minecraft', 'discord-bot'],
+    validateUpdate: (_, update) => !update.serviceType || ['minecraft', 'discord-bot'].includes(update.serviceType)
+  },
   server: {
-    canProceed: (state) => Boolean(state.serverType),
-    getAvailableOptions: () => SERVER_TYPES,
-    validateUpdate: (_, update) => !update.serverType || SERVER_TYPES.includes(update.serverType as ServerType)
+    canProceed: (state) => {
+      if (state.serviceType === 'discord-bot') return true
+      return Boolean(state.serverType)
+    },
+    getAvailableOptions: (state) => state.serviceType === 'minecraft' ? SERVER_TYPES : [],
+    validateUpdate: (state, update) => {
+      if (state.serviceType === 'discord-bot') return !update.serverType
+      return !update.serverType || SERVER_TYPES.includes(update.serverType as ServerType)
+    }
+  },
+  runtime: {
+    canProceed: (state) => {
+      if (state.serviceType === 'minecraft') return true
+      return Boolean(state.discordRuntime)
+    },
+    getAvailableOptions: (state) => state.serviceType === 'discord-bot' ? ['nodejs', 'python'] : [],
+    validateUpdate: (state, update) => {
+      if (state.serviceType === 'minecraft') return !update.discordRuntime
+      return !update.discordRuntime || ['nodejs', 'python'].includes(update.discordRuntime)
+    }
   },
   cpuram: {
     canProceed: (state) => {
@@ -236,19 +277,20 @@ export const StepValidators: Record<FormStep | 'billing' | 'ram', StepValidation
       const baseRequirements = Boolean(
         state.region &&
         state.planType &&
-        state.serverType &&
+        state.serviceType &&
         state.ram &&
         state.billingPeriod &&
         isValidPlanForRegion(state.region, state.planType) &&
         isValidRAMForPlan(state.region, state.planType, state.ram)
       )
 
-    /*if (state.region !== '') {
-        return baseRequirements && Boolean(
-          state.cpuThreads &&
-          state.storage
-        )
-      }*/
+      if (state.serviceType === 'minecraft') {
+        return baseRequirements && Boolean(state.serverType)
+      }
+      
+      if (state.serviceType === 'discord-bot') {
+        return baseRequirements && Boolean(state.discordRuntime)
+      }
 
       return baseRequirements
     },
@@ -282,18 +324,33 @@ export const StepValidators: Record<FormStep | 'billing' | 'ram', StepValidation
 
 // Step navigation
 export const getNextStep = (currentStep: FormStep, state: FormState): FormStep | null => {
-  const stepOrder: FormStep[] = ['region', 'plan', 'server', 'cpuram', 'storage', 'checkout']
+  const baseStepOrder: FormStep[] = ['type', 'region', 'plan']
+  const minecraftFlow: FormStep[] = ['server', 'cpuram', 'storage', 'checkout']
+  const discordFlow: FormStep[] = ['runtime', 'checkout']
+  
+  let stepOrder: FormStep[]
+  if (state.serviceType === 'minecraft') {
+    stepOrder = [...baseStepOrder, ...minecraftFlow]
+  } else if (state.serviceType === 'discord-bot') {
+    stepOrder = ['type', ...discordFlow]
+  } else {
+    stepOrder = baseStepOrder
+  }
+  
   const currentIndex = stepOrder.indexOf(currentStep)
   
   if (currentIndex === -1 || !StepValidators[currentStep].canProceed(state)) {
     return currentStep
   }
 
-  if (state.region === 'us-east' && stepOrder[currentIndex + 1] === 'storage') {
+  const nextStep = stepOrder[currentIndex + 1]
+  
+  // Skip storage step for US East in minecraft flow
+  if (state.region === 'us-east' && state.serviceType === 'minecraft' && nextStep === 'storage') {
     return 'checkout'
   }
   
-  return stepOrder[currentIndex + 1] || null
+  return nextStep || null
 }
 
 // Price calculation helpers
@@ -311,6 +368,18 @@ export const formatPrice = (price: number, period?: 'month' | 'gb'): string => {
 
 // URL generation
 export const generateCheckoutUrl = (config: FormState): string => {
+  // Discord Bot special checkout URLs
+  if (config.serviceType === 'discord-bot') {
+    if (config.discordRuntime === 'python') {
+      return 'https://billing.sear.host/checkout/config/17'
+    } else if (config.discordRuntime === 'nodejs') {
+      return 'https://billing.sear.host/checkout/config/16'
+    }
+    // Fallback to nodejs if runtime not specified
+    return 'https://billing.sear.host/checkout/config/16'
+  }
+
+  // Minecraft server checkout logic (existing)
   const params = new URLSearchParams()
   
   let configSet = CHECKOUT_CONFIGS.BUDGET_ASIA
@@ -402,6 +471,7 @@ export const CHECKOUT_CONFIGS: Record<'BUDGET_ASIA' | 'BUDGET_NA', CheckoutConfi
         'singapore': '140'
       },
       storage: {
+        '3': '999', // Discord bot storage (placeholder value)
         '50': '147',
         '75': '148',
         '100': '149',
@@ -409,6 +479,7 @@ export const CHECKOUT_CONFIGS: Record<'BUDGET_ASIA' | 'BUDGET_NA', CheckoutConfi
         '200': '151'
       },
       cpu: {
+        '0.5': '999', // Discord bot CPU (placeholder value)
         '1': '175',
         '2': '176',
         '3': '177',
@@ -429,6 +500,7 @@ export const CHECKOUT_CONFIGS: Record<'BUDGET_ASIA' | 'BUDGET_NA', CheckoutConfi
     },
     values: {
       ram: {
+        '0.5': '999', // Discord bot RAM (placeholder value)
         '4': '160',
         '6': '161',
         '8': '162',
@@ -445,6 +517,7 @@ export const CHECKOUT_CONFIGS: Record<'BUDGET_ASIA' | 'BUDGET_NA', CheckoutConfi
         'GeyserMC': '172'
       },
       cpu: {
+            '0.5': '999', // Discord bot CPU (placeholder value)
             '1': '194',
             '2': '195',
             '3': '196',

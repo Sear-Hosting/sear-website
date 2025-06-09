@@ -1,28 +1,54 @@
 import * as React from 'react'
-import { FormStep } from "./types"
+import { FormStep, ServiceType } from "./types"
 import { cn } from "@/lib/utils"
 import { useIsMobile } from "@/hooks/use-mobile"
 interface Props {
   currentStep: FormStep
-  state?: { region?: string }
+  state?: { region?: string; serviceType?: ServiceType }
 }
 
-const ALL_STEPS: { step: FormStep; label: string }[] = [
-  { step: 'region', label: 'Location' },
-  { step: 'plan', label: 'Plan' },
-  { step: 'server', label: 'Server Type' },
-  { step: 'cpuram', label: 'CPU/RAM' },
-  { step: 'storage', label: 'Storage' },
-  { step: 'checkout', label: 'Checkout' }
-]
+const getStepsForServiceType = (serviceType?: ServiceType, region?: string, currentStep?: FormStep): { step: FormStep; label: string }[] => {
+  // If on type step, only show the type step
+  if (currentStep === 'type') {
+    return [{ step: 'type' as FormStep, label: 'Type' }]
+  }
+  
+  const baseSteps = [
+    { step: 'type' as FormStep, label: 'Type' },
+    { step: 'region' as FormStep, label: 'Location' },
+    { step: 'plan' as FormStep, label: 'Plan' }
+  ]
+  
+  if (serviceType === 'minecraft') {
+    const minecraftSteps = [
+      { step: 'server' as FormStep, label: 'Server Type' },
+      { step: 'cpuram' as FormStep, label: 'CPU/RAM' },
+      { step: 'storage' as FormStep, label: 'Storage' },
+      { step: 'checkout' as FormStep, label: 'Checkout' }
+    ]
+    
+    // Skip storage for US East
+    if (region === 'us-east') {
+      return [...baseSteps, ...minecraftSteps.filter(step => step.step !== 'storage')]
+    }
+    
+    return [...baseSteps, ...minecraftSteps]
+  } else if (serviceType === 'discord-bot') {
+    return [
+      { step: 'type' as FormStep, label: 'Type' },
+      { step: 'runtime' as FormStep, label: 'Runtime' },
+      { step: 'checkout' as FormStep, label: 'Checkout' }
+    ]
+  }
+  
+  // Default to base steps if no service type selected yet
+  return baseSteps
+}
 
 export function FormProgress({ currentStep, state }: Props) {
   const STEPS = React.useMemo(() => {
-    if (state?.region === 'us-east') {
-      return ALL_STEPS.filter(step => step.step !== 'storage')
-    }
-    return ALL_STEPS
-  }, [state?.region])
+    return getStepsForServiceType(state?.serviceType, state?.region, currentStep)
+  }, [state?.serviceType, state?.region, currentStep])
   const isMobile = useIsMobile()
   const currentIndex = STEPS.findIndex(s => s.step === currentStep)
   
