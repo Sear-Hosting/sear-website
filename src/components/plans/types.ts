@@ -1,6 +1,6 @@
 // Basic types
 export type Region = 'india' | 'singapore' | 'us-east'
-export type PlanType = 'budget' | 'budget+'
+export type PlanType = 'budget'
 export type ServerType = 'PaperMC' | 'Fabric' | 'PocketmineMP' | 'Forge' | 'GeyserMC'
 export type CPUThreads = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8'
 export type RAM = '2' | '3' | '4' | '5' | '6' | '7' | '8' | '10' | '12' | '16' | '20'
@@ -47,17 +47,12 @@ export const SERVER_TYPES: ServerType[] = [
 ]
 
 // Pricing
-export const getCPUThreadPrice = (region: Region, planType: PlanType, threads: CPUThreads): number => {
+export const getCPUThreadPrice = (region: Region, threads: CPUThreads): number => {
   const basePrice = 3.75; // Base price per thread for Budget Asia
   const threadCount = Number(threads);
 
   if (region === 'us-east') {
       return threadCount <= 2 ? 0 : (threadCount - 2) * 1.25; // US East 2 free threads
-  }
-
-  // Budget+ Asia regions have higher per-thread pricing
-  if (planType === 'budget+') {
-    return threadCount * 4.75;
   }
 
   // Budget Asia regions use base pricing
@@ -81,15 +76,15 @@ export const US_EAST_FIXED = {
   ramPricePerGB: 0.75
 }
 
-export const RAM_PRICING = (region: Region, ram: RAM, planType: PlanType = 'budget'): number => {
+export const RAM_PRICING = (region: Region, ram: RAM): number => {
   const ramAmount = Number(ram);
   
   if (region === 'us-east') {
     return ramAmount * US_EAST_FIXED.ramPricePerGB;
   }
 
-  // Asia regions (India/Singapore) have plan-specific pricing
-  const pricePerGB = planType === 'budget+' ? 1.25 : 1;
+  // Asia regions (India/Singapore) use standard pricing
+  const pricePerGB = 1;
   return ramAmount * pricePerGB;
 }
 
@@ -110,24 +105,15 @@ export const PLAN_SPECS: Record<Region, Record<PlanType, PlanSpecs>> = {
   'india': {
     budget: {
       cpu: 'Ampere® Altra® @ 3.0 GHz'
-    },
-    'budget+': {
-      cpu: 'AMD EPYC 7J13'
     }
   },
   'singapore': {
     budget: {
       cpu: 'Ampere® Altra® @ 3.0 GHz'
-    },
-    'budget+': {
-      cpu: 'AMD EPYC 7J13'
     }
   },
   'us-east': {
     budget: {
-      cpu: 'Ryzen 9 5900x'
-    },
-    'budget+': {
       cpu: 'Ryzen 9 5900x'
     }
   }
@@ -136,24 +122,21 @@ export const PLAN_SPECS: Record<Region, Record<PlanType, PlanSpecs>> = {
 // Region plan configuration
 export const REGION_PLAN_CONFIG = {
   india: {
-    availablePlans: ['budget', 'budget+'] as const,
+    availablePlans: ['budget'] as const,
     ramOptions: {
-      budget: ['2', '3', '4', '5', '6', '7', '8', '10', '12', '16', '20'] as const,
-      ['budget+']: ['4', '6', '8', '10', '12', '16', '20'] as const
+      budget: ['2', '3', '4', '5', '6', '7', '8', '10', '12', '16', '20'] as const
     }
   },
   singapore: {
-    availablePlans: ['budget', 'budget+'] as const,
+    availablePlans: ['budget'] as const,
     ramOptions: {
-      budget: ['2', '3', '4', '5', '6', '7', '8', '10', '12', '16', '20'] as const,
-      ['budget+']: ['4', '6', '8', '10', '12', '16', '20'] as const
+      budget: ['2', '3', '4', '5', '6', '7', '8', '10', '12', '16', '20'] as const
     }
   },
   'us-east': {
     availablePlans: ['budget'] as const,
     ramOptions: {
-      budget: ['4', '6', '8', '10', '12', '16', '20'] as const,
-      ['budget+']: [] as const
+      budget: ['4', '6', '8', '10', '12', '16', '20'] as const
     }
   }
 } as const
@@ -333,8 +316,6 @@ export const generateCheckoutUrl = (config: FormState): string => {
   let configSet = CHECKOUT_CONFIGS.BUDGET_ASIA
   if (config.region === 'us-east') {
     configSet = CHECKOUT_CONFIGS.BUDGET_NA
-  } else if (config.planType === 'budget+') {
-    configSet = CHECKOUT_CONFIGS.BUDGET_PLUS_ASIA
   }
 
   // Required parameters
@@ -388,7 +369,7 @@ type CheckoutConfig = {
   };
 };
 
-export const CHECKOUT_CONFIGS: Record<'BUDGET_ASIA' | 'BUDGET_PLUS_ASIA' | 'BUDGET_NA', CheckoutConfig> = {
+export const CHECKOUT_CONFIGS: Record<'BUDGET_ASIA' | 'BUDGET_NA', CheckoutConfig> = {
   BUDGET_ASIA: {
     baseUrl: 'https://billing.sear.host/checkout/config/13',
     params: {
@@ -436,55 +417,6 @@ export const CHECKOUT_CONFIGS: Record<'BUDGET_ASIA' | 'BUDGET_PLUS_ASIA' | 'BUDG
         '6': '180',
         '7': '181',
         '8': '182'
-      }
-    }
-  },
-  BUDGET_PLUS_ASIA: {
-    baseUrl: 'https://billing.sear.host/checkout/config/14',
-    params: {
-      RAM: '36',
-      SERVER_TYPE: '37',
-      LOCATION: '40',
-      DISK: '43',
-      CPU: '48'
-    },
-    values: {
-      ram: {
-        '4': '121',
-        '6': '122',
-        '8': '123',
-        '10': '124',
-        '12': '125',
-        '16': '126',
-        '20': '127'
-      },
-      serverType: {
-        'PaperMC': '129',
-        'Fabric': '192',
-        'PocketmineMP': '130',
-        'Forge': '131',
-        'GeyserMC': '141'
-      },
-      location: {
-        'india': '143',
-        'singapore': '145'
-      },
-      storage: {
-        '50': '155',
-        '75': '156',
-        '100': '157',
-        '150': '158',
-        '200': '159'
-      },
-      cpu: {
-        '1': '183',
-        '2': '184',
-        '3': '185',
-        '4': '186',
-        '5': '187',
-        '6': '188',
-        '7': '189',
-        '8': '190'
       }
     }
   },
