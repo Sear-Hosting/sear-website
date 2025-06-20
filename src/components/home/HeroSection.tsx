@@ -57,7 +57,11 @@ export function HeroSection() {
             </div>
             <div className="glass-effect p-6 rounded-lg space-y-2 col-span-2 md:col-span-1">
               <p className="text-3xl font-bold text-gradient-primary">3</p>
-              <p className="text-sm text-foreground-secondary">Global Locations</p>
+              <p className="text-sm text-foreground-secondary">
+                <Link href="/global-cities" className="hover:underline cursor-pointer">
+                  Global* Locations
+                </Link>
+              </p>
             </div>
           </div>
         </div>

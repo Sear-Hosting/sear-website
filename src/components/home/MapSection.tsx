@@ -8,6 +8,7 @@ import {
   Marker,
 } from 'react-simple-maps';
 import { DATACENTER_LOCATIONS, usePing } from '@/hooks/use-ping';
+import Link from 'next/link';
 
 export function MapSection() {
   const pings = usePing();
@@ -26,8 +27,10 @@ export function MapSection() {
     <section className="relative py-16 depth-effect">
       <div className="container-custom">
         <h2 className="text-3xl font-bold text-center mb-12">
-          <span className="text-gradient-primary">Global</span>{' '}
-          <span className="text-gradient-secondary">Infrastructure</span>
+          <Link href="/global-cities" className="hover:underline">
+            <span className="text-gradient-primary">Global*</span>{' '}
+            <span className="text-gradient-secondary">Infrastructure</span>
+          </Link>
         </h2>
         
         <div className="max-w-3xl mx-auto aspect-[2/1] glass-effect rounded-lg border-border-strong">
